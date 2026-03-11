@@ -22,7 +22,7 @@ export async function register(
   payload: RegisterPayload
 ): Promise<UserResponse> {
   const { data } = await apiClient.post<UserResponse>(
-    "auth/registerrrr",
+    "auth/register",
     payload
   );
 
