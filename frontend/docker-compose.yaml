@@ -1,0 +1,58 @@
+version: '3.7'
+services:
+  app:
+    build:
+      dockerfile: Dockerfile.local
+      context: .
+      args:
+        - MYSQL_HOST=db
+        - MYSQL_PWD=demo
+    environment:
+      DATABASE_URL: "mysql://demo:demo@db:3306/pokemons"
+      SHADOW_DATABASE_URL: "mysql://demo:demo@db:3306/pokemons_shadow"
+    ports:
+      - '3000:3000'
+      - '9229:9229'
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - '.:/app'
+      - '/app/node_modules'
+    networks:
+      - pokemon-app
+  db:
+    container_name: pokemon-app-db
+    image: mysql:8.0.32
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: pokemons
+      MYSQL_ROOT_PASSWORD: demo
+      MYSQL_PASSWORD: demo
+      MYSQL_USER: demo
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    command: --sql-mode="NO_ENGINE_SUBSTITUTION"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database-init:/docker-entrypoint-initdb.d
+    networks:
+      - pokemon-app
+    healthcheck:
+      test: 'exit 0'
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: pokemon-app-phpmyadmin
+    restart: unless-stopped
+    ports:
+      - 8080:80
+    environment:
+      - PMA_ARBITRARY=1
+    networks:
+      - pokemon-app
+networks:
+  pokemon-app:
+    driver: bridge
+volumes:
+  mysql_data:

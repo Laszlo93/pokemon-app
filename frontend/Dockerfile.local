@@ -1,0 +1,8 @@
+FROM node:24-alpine
+RUN apk add --no-cache build-base python3
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --include=optional
+COPY . .
+EXPOSE 3000
+CMD [ "npm", "run", "start:migrate:dev" ]

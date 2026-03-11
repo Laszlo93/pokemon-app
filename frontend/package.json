@@ -9,6 +9,7 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
+    "start:migrate:dev": "prisma generate && npm run prisma:deploy && npm run start:dev",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
@@ -18,7 +19,9 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "prisma:dev": "cd prisma && prisma migrate dev --create-only",
-    "prisma:deploy": "cd prisma && prisma migrate deploy"
+    "prisma:deploy": "cd prisma && prisma migrate deploy",
+    "docker:compose:up": "docker compose up",
+    "docker:compose:down": "docker compose down"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
