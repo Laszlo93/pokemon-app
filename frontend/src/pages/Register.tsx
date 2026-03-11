@@ -20,6 +20,7 @@ export function Register() {
   } = useForm<RegisterFormData>();
 
   async function onSubmit(values: RegisterFormData) {
+
     try {
       const { firstName, lastName, email, password } = values;
       await registerApi({ firstName, lastName, email, password });
@@ -29,7 +30,9 @@ export function Register() {
       });
       setToken(accessToken);
       navigate("/", { replace: true });
-    } catch {
+    } catch (err) {
+      console.error("Registration failed", err);
+
       setSnackbarMessage("Registration failed");
     }
   }
@@ -114,6 +117,7 @@ export function Register() {
           Already have an account? <Link to="/login">Log in</Link>
         </Typography>
       </Box>
+
       <Snackbar
         open={Boolean(snackbarMessage)}
         autoHideDuration={6000}

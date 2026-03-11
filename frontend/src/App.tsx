@@ -7,6 +7,7 @@ import {
 import { Register } from "./pages/Register";
 import { Login } from "./pages/Login";
 import { PokemonList } from "./pages/PokemonList";
+import { PokemonDetailPage } from "./pages/PokemonDetail";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 
@@ -18,6 +19,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <PokemonList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/pokemon/:id"
+        element={
+          <ProtectedRoute>
+            <PokemonDetailPage />
           </ProtectedRoute>
         }
       />

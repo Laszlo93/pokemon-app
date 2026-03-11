@@ -19,14 +19,19 @@ export function Login() {
   } = useForm<LoginPayload>();
 
   async function onSubmit(values: LoginPayload) {
+
     try {
       const { accessToken } = await loginApi(values);
       setToken(accessToken);
       navigate("/", { replace: true });
     } catch (err: unknown) {
-      const status = err && typeof err === "object" && "response" in err
-        ? (err as { response?: { status?: number } }).response?.status
-        : undefined;
+      console.error("Login failed", err);
+
+      const status =
+        err && typeof err === "object" && "response" in err
+          ? (err as { response?: { status?: number } }).response?.status
+          : undefined;
+
       setSnackbarMessage(status === 401 ? "Invalid login data" : "Login failed");
     }
   }
@@ -83,6 +88,7 @@ export function Login() {
         Don&apos;t have an account? <Link to="/register">Register</Link>
       </Typography>
     </Box>
+
     <Snackbar
       open={Boolean(snackbarMessage)}
       autoHideDuration={6000}
