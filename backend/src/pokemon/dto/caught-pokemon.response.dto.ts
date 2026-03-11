@@ -1,11 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { CaughtPokemon } from 'prisma/generated/client';
 
-export class CaughtPokemonResponseDto {
+export class CaughtPokemonResponseDto implements CaughtPokemon {
+  @ApiProperty({ example: 1 })
+  userId: number;
+
   @ApiProperty({ example: 1 })
   id: number;
 
   @ApiProperty({ example: 25 })
   pokemonId: number;
+
+  @ApiProperty({ example: 'Pikachu' })
+  name: string;
 
   @ApiProperty({ example: ['grass', 'poison'] })
   types: string[];
