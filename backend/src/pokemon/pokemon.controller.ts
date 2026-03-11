@@ -1,5 +1,6 @@
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiConflictResponse,
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
@@ -33,6 +34,7 @@ const PATHS = {
 };
 
 @Controller(PATHS.basePath)
+@ApiBearerAuth()
 export class PokemonController {
   constructor(private readonly pokemonService: PokemonService) {}
 
