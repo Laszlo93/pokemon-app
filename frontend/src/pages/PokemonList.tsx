@@ -33,16 +33,19 @@ export function PokemonList() {
   const [loadingTypes, setLoadingTypes] = useState(true);
   const [loadingList, setLoadingList] = useState(false);
   const [caughtIds, setCaughtIds] = useState<Set<number>>(new Set());
+  const [caughtList, setCaughtList] = useState<PokemonListItem[]>([]);
   const [releasingId, setReleasingId] = useState<number | null>(null);
 
   const loadCaughtIds = useCallback(async () => {
     try {
       const list = await getCaughtPokemons();
       setCaughtIds(new Set(list.map((c) => c.pokemonId)));
+      setCaughtList(list.map((c) => ({ id: c.pokemonId, name: c.name })));
     } catch (err) {
       console.error("Failed to load caught pokemons", err);
 
       setCaughtIds(new Set());
+      setCaughtList([]);
     }
   }, []);
 
@@ -125,16 +128,19 @@ export function PokemonList() {
   const displayList =
     selectedTypeId === ""
       ? []
-      : pokemonList
+      : (selectedTypeId === "all" && onlyCaught
+          ? caughtList
+          : pokemonList.filter((p) => {
+              if (onlyCaught && !caughtIds.has(p.id)) return false;
+              return true;
+            })
+        )
           .filter((p) => {
-            if (onlyCaught && !caughtIds.has(p.id)) return false;
-
             if (
               searchText &&
               !p.name.toLowerCase().includes(searchText.toLowerCase())
             )
               return false;
-
             return true;
           })
           .sort((a, b) => {
@@ -144,7 +150,10 @@ export function PokemonList() {
             return sortBy === "name-asc" ? cmp : -cmp;
           });
 
-  const showListLoading = selectedTypeId !== "" && loadingList;
+  const showListLoading =
+    selectedTypeId !== "" &&
+    loadingList &&
+    !(selectedTypeId === "all" && onlyCaught);
 
   return (
     <>
