@@ -15,7 +15,7 @@ export class PokemonRepository {
     return this.prisma.caughtPokemon.create({
       data: {
         userId,
-        pokemonId: catchPokemonDto.pokemonId,
+        ...catchPokemonDto,
       },
     });
   }

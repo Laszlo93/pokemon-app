@@ -23,6 +23,8 @@ model User {
 model CaughtPokemon {
   id        Int      @id @default(autoincrement())
   pokemonId Int
+  name      String   @db.VarChar(64)
+  types     Json     @db.Json
   caughtAt  DateTime @default(now())
 
   userId Int
