@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Prisma } from 'prisma/generated/client';
 import { CatchPokemonDto } from './dto/catch-pokemon.dto';
 import { PokemonRepository } from './pokemon.repository';
@@ -30,6 +34,19 @@ export class PokemonService {
       }
 
       throw error;
+    }
+  }
+
+  async releasePokemon(params: { userId: number; pokemonId: number }) {
+    const { userId, pokemonId } = params;
+
+    const pokemon = await this.pokemonRepository.releasePokemon({
+      userId,
+      pokemonId,
+    });
+
+    if (!pokemon) {
+      throw new NotFoundException(errorMessages.notFound.caughtPokemonNotFound);
     }
   }
 }

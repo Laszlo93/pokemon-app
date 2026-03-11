@@ -3,8 +3,20 @@ import {
   ApiConflictResponse,
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
+  ApiNoContentResponse,
+  ApiNotFoundResponse,
 } from '@nestjs/swagger';
-import { Body, Controller, Post, Request } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  Post,
+  Request,
+} from '@nestjs/common';
 import { PokemonService } from './pokemon.service';
 import { CatchPokemonDto } from './dto/catch-pokemon.dto';
 import { CaughtPokemonResponseDto } from './dto/caught-pokemon.response.dto';
@@ -13,6 +25,7 @@ import { errorMessages } from './constants/error-messages';
 
 const PATHS = {
   basePath: 'pokemons',
+  release: ':pokemonId',
 };
 
 @Controller(PATHS.basePath)
@@ -40,5 +53,25 @@ export class PokemonController {
     const { userId } = req.user;
 
     return this.pokemonService.catchPokemon({ userId, catchPokemonDto });
+  }
+
+  @Delete(PATHS.release)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({
+    description: 'Pokemon released successfully',
+  })
+  @ApiNotFoundResponse({
+    description: errorMessages.notFound.caughtPokemonNotFound,
+  })
+  @ApiInternalServerErrorResponse({
+    description: errorMessages.internalServerError,
+  })
+  async releasePokemon(
+    @Request() req: RequestWithUser,
+    @Param('pokemonId', ParseIntPipe) pokemonId: number,
+  ): Promise<void> {
+    const { userId } = req.user;
+
+    return this.pokemonService.releasePokemon({ userId, pokemonId });
   }
 }

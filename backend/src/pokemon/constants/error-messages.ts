@@ -9,4 +9,7 @@ export const errorMessages = {
   conflict: {
     pokemonAlreadyCaught: 'Pokemon already caught by this user',
   },
+  notFound: {
+    caughtPokemonNotFound: 'Caught pokemon not found for this user',
+  },
 };

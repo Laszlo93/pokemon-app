@@ -19,4 +19,12 @@ export class PokemonRepository {
       },
     });
   }
+
+  async releasePokemon(params: { userId: number; pokemonId: number }) {
+    const { userId, pokemonId } = params;
+
+    return this.prisma.caughtPokemon.delete({
+      where: { userId_pokemonId: { userId, pokemonId } },
+    });
+  }
 }
