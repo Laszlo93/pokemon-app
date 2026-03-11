@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { Prisma } from 'prisma/generated/client';
 import { CatchPokemonDto } from './dto/catch-pokemon.dto';
+import { ListCaughtPokemonsQueryDto } from './dto/list-caught-pokemons.query.dto';
 import { PokemonRepository } from './pokemon.repository';
 import { errorMessages } from './constants/error-messages';
 
@@ -48,5 +49,17 @@ export class PokemonService {
     if (!pokemon) {
       throw new NotFoundException(errorMessages.notFound.caughtPokemonNotFound);
     }
+  }
+
+  async getCaughtPokemons(params: {
+    userId: number;
+    query: ListCaughtPokemonsQueryDto;
+  }) {
+    const { userId, query } = params;
+
+    return this.pokemonRepository.findManyByUserId({
+      userId,
+      query,
+    });
   }
 }

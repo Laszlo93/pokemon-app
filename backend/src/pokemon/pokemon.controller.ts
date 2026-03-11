@@ -5,21 +5,25 @@ import {
   ApiInternalServerErrorResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
+  ApiOkResponse,
 } from '@nestjs/swagger';
 import {
   Body,
   Controller,
   Delete,
+  Get,
   HttpCode,
   HttpStatus,
   Param,
   ParseIntPipe,
   Post,
+  Query,
   Request,
 } from '@nestjs/common';
 import { PokemonService } from './pokemon.service';
 import { CatchPokemonDto } from './dto/catch-pokemon.dto';
 import { CaughtPokemonResponseDto } from './dto/caught-pokemon.response.dto';
+import { ListCaughtPokemonsQueryDto } from './dto/list-caught-pokemons.query.dto';
 import { RequestWithUser } from 'src/auth/types/types';
 import { errorMessages } from './constants/error-messages';
 
@@ -53,6 +57,23 @@ export class PokemonController {
     const { userId } = req.user;
 
     return this.pokemonService.catchPokemon({ userId, catchPokemonDto });
+  }
+
+  @Get()
+  @ApiOkResponse({
+    description: 'List of caught pokemons for the current user',
+    type: [CaughtPokemonResponseDto],
+  })
+  @ApiInternalServerErrorResponse({
+    description: errorMessages.internalServerError,
+  })
+  getCaughtPokemons(
+    @Request() req: RequestWithUser,
+    @Query() query: ListCaughtPokemonsQueryDto,
+  ) {
+    const { userId } = req.user;
+
+    return this.pokemonService.getCaughtPokemons({ userId, query });
   }
 
   @Delete(PATHS.release)
