@@ -30,9 +30,6 @@ class EnvironmentVariables {
 
   @IsString()
   ACCESS_TOKEN_SECRET_KEY: string;
-
-  @IsString()
-  FRONTEND_HOST: string;
 }
 
 export function validate(config: Record<string, unknown>) {

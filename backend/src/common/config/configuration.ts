@@ -3,7 +3,6 @@ export default () =>
     nodeEnv: process.env.NODE_ENV ?? 'development',
     app: {
       port: process.env.PORT ? Number(process.env.PORT) : 3000,
-      frontendHost: process.env.FRONTEND_HOST,
     },
     db: {
       url: process.env.DATABASE_URL,
